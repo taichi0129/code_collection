@@ -1,0 +1,21 @@
+.showbox {
+  display: inline-block;
+}
+
+.showbox p {
+  text-align: center;
+}
+
+.showbox img {
+  border: 2px solid skyblue;
+  display: block;
+  width: 520px;
+  height: 340px;
+}
+
+#slidecaption {
+  background-color: #00a;
+  color: white;
+  font-weight: bold;
+  display: block;
+}
