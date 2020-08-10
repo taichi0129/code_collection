@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="slick.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="slick-theme.css" media="screen" />
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="slick.min.js"></script>
+</head>
+<body>
+  <div class="autoplay">
+    <p><img src="img/slideshow2.jpg" alt="イメージ１"></p>
+    <p><img src="img/slideshow3.jpg" alt="イメージ２"></p>
+    <p><img src="img/slideshow4.jpg" alt="イメージ３"></p>
+    <p><img src="img/slideshow5.jpg" alt="イメージ４"></p>
+    <p><img src="img/slideshow6.jpg" alt="イメージ５"></p>
+    <p><img src="img/slideshow7.jpg" alt="イメージ６"></p>
+  </div>
+  <script>
+    $(document).ready(function(){
+      $('.autoplay').slick({
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 2000
+      });
+    });
+  </script>
+</body>
+</html>
