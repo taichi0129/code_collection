@@ -20,8 +20,8 @@ config/app.php
 
 ・データベースの文字コード
 config/database.php
-'charset' => 'utf8',
-'collation' => 'utf8_unicode_ci',
+'charset' => 'utf8mb4',
+'collation' => 'utf8mb4_unicode_ci',
 →絵文字ありの文字コード
 
 'charset' => 'utf8',
