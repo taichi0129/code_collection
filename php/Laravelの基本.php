@@ -185,3 +185,96 @@ validation.php の最下部にattributesという連想配列があるため、
 その中に記述
 例）
 'password' => 'パスワード'
+
+●バリデーション属性
+nullable($value = true) →　railsの null: falseと一緒
+unsigned() →　数値に使用　マイナスはない、プラスのときだけに使用
+
+●マイグレーションファイルの追加、ロールバック
+追加）
+php artisan make:migration add_カラム名_to_テーブル名_table —table=テーブル名
+
+→after('カラム名')　引数のカラム名の後にカラムを追加することができる
+→dropColumn('カラム名')　引数のカラムを消去できる
+
+ロールバック）
+php artisan migrate:rollback マイグレーションファイルを一つ戻す
+php artisan migrate:rollback —step=○　○個分マイグレーションファイル戻す
+
+php artisan migrate:status マイグレーションファイルの状況を確認
+
+●Restfulなコントローラー作成
+７つのアクション全てが事前に記述されたコントローラーが作成できる
+php artisan make:controller モデル名Controller --resource
+
+●ルーティングの記述
+基本例）
+Route::get(‘contact/index’, ‘’ContactFormController@index);
+
+認証付きのルーティング例）
+Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
+    Route::get('index', 'ContactFormController@index');
+});
+
+※ルートに名前を付ける
+引数の後に->name(‘つけたい名前’)
+ビューから呼び出しをする際に名前をつけておくと便利
+
+※ルートの見方
+php artisan route:list　ターミナル上でルートが確認できる
+php artisan route:list > ファイル名.txt　ルート一覧のファイルが作成される
+
+●認証ディレクティブ
+@guest
+~ゲストならこれを表示~
+@else
+~ゲストではなければこちらを表示~
+@endguest
+
+●Requestクラス
+PHPはスーパーグローバル変数、LaravelはRequestでデータを取得する
+例）
+public function store(Request $request)
+    {
+        $your_name = $request->input('your_name');
+    }
+
+●データベースの保存方法
+モデルを使えるようにインスタンス化
+例）
+use App\Models\ContactForm; 登録したいモデルを使えるようにする
+
+~store内~
+$contact = new ContactForm;  //モデルをインスタンス化する
+
+$contact->your_name = $request->input('your_name'); //カラム名に対応するインプットデータを$contactに格納
+
+$contact->save(); //データを保存
+return redirect('contact/index'); //保存後リダイレクトするなら記述
+
+●データの表示方法(index)
+・エロクワント、ORマッパー
+$contacts = ContactForm::all();
+
+・クエリビルダ
+use Illuminate\Support\Facades\DB;　を記述
+
+$contacts = DB::table('contact_forms')
+->select('id', 'your_name')
+->get();
+
+return view('contact.index', compact('contacts')); //compact関数（引数は＄なしの変数）
+
+●表示順
+orderByメソッド
+クエリビルダでメソッドチェーンとして
+->orderBy('カラム名', 'desc' or 'asc')　で順番をソートできる
+
+●詳細表示(show)
+$contact = ContactForm::find($id);
+
+return view('contact.show', compact('contact'));
+
+・詳細ページへのリンク
+{{ route('contact.show', ['id' => $contact->id])}}　//連想配列でidをわたしてあげる
+
