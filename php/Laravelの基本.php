@@ -404,3 +404,42 @@ if($search !== null){
 $query->select('id', 'your_name', 'title', 'created_at');
 $query->orderBy('created_at', 'asc');
 $contacts = $query->paginate(20);
+
+●リレーション
+・１対多
+主キーは基本的にbigIntegerになっているため、
+紐付けはunsignedBigIntegerとなる
+
+・多対多
+中間テーブルを作成
+双方のモデルにbelongsToManyを使用
+例）
+public function routes() {
+        return $this->belongsToMany('App\Models\Route');
+    }
+
+中間テーブルのマイグレーションファイルに記述
+$table->unsignedBigInteger('route_id');
+$table->unsignedBigInteger('shop_id');
+$table->primary(['route_id', 'shop_id']);　主キーがなくなるため、この記述で主キーを付与
+
+●アソシエーション
+・hasMany
+public function shops() {
+    return $this->hasMany('App\Models\Shop');
+}
+・belongsTo
+public function area() {
+    return $this->belongsTo('App\Models\Area');
+}
+
+・コントローラーでは主->従で取得する場合
+$area_tokyo = Area::find(1)->shops;
+
+従->主で取得する場合
+$shop = Shop::find(2)->area->name;
+
+●外部キー制約（FK）※相手先のid内でしか登録できないよう制限をかける
+マイグレーションファイルに記述
+$table->foreign(対象のカラム)->references(相手先のカラム)->on(相手先のテーブル);
+$table->foreign('area_id')->references('id')->on('areas');
