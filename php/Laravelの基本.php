@@ -278,3 +278,129 @@ return view('contact.show', compact('contact'));
 ・詳細ページへのリンク
 {{ route('contact.show', ['id' => $contact->id])}}　//連想配列でidをわたしてあげる
 
+●ファットコントローラーの対策
+AppフォルダにServicesフォルダを作成、中に必要なファイルを作成
+例）
+namespace App\Services;
+
+class CheckFormData
+{
+  public static function checkGender($data) {
+    if($data->gender === 0) {
+      $gender = '男性';
+    }
+    if($data->gender === 1) {
+      $gender = '女性';
+    }
+    return $gender;
+  }
+
+  public static function checkAge($data) {
+    if($data->age === 1) {
+      $age = '~19';
+    }
+    if($data->age === 2) {
+      $age = '20~29';
+    }
+    if($data->age === 3) {
+      $age = '30~39';
+    }
+    return $age;
+  }
+}
+・コントローラーに返してあげる
+use App\Services\ファイル名;
+
+$gender = CheckFormData::checkgender($contact);
+$age = CheckFormData::checkAge($contact);
+
+●Laravelバリデーション
+php artisan make:request ファイル名
+
+public function authorize →　falseをtrueに変える
+public function rule に連想配列でバリデーションを書いていく
+
+→コントローラーのstoreアクションの引数を上記作成のファイル名にした後
+ビュー側でのエラー表示
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+●ダミーデータ（seedで作成）
+php artisan make:seeder UsersTableseeder
+public function run() の中に書いていく
+
+・databaseSeederに作成したseedの許可をする
+$this->call(UsersTableSeeder::class);
+
+・シーダの実行
+composer dump-autoload
+php artisan db:seed
+
+・マイグレーションファイルの更新
+php artisan migrate:refresh
+php artisan migrate:refresh --seed　→更新しつつseedデータも入れてくれる
+php artisan migrate:fresh —-seed　も一緒
+
+●ダミーデータ（factory&faker）
+php artisan make:factory ContactFormFactory
+
+use App\Model; の記述を使用したいモデルの記述にしていく
+$factory->define(Model::class, function (Faker $faker)も一緒
+例）
+use App\Models\ContactForm;
+$factory->define(ContactForm::class, function (Faker $faker)
+
+・フェイカーを日本語に変更
+config/app.php
+'faker_locale' => 'ja_JP’,に変更
+
+フェイカーを記述後シーダーも作成
+use App\Models\ContactForm; 作成するモデルファイルを記述
+
+public function run 内に記述
+factory(ContactForm::class, 200)->create(); //200個のダミーデータを生成
+
+databaseSeederに記述
+$this->call(ContactFormSeeder::class);
+
+・シーダの実行
+composer dump-autoload
+php artisan db:seed
+
+●ページネーション
+クエリビルダとして
+->paginate()をつける
+
+ビューにページを表示させる
+{{ $contacts->links() }}
+
+●検索フォーム
+検索フォームをつけるアクションの引数に（Request $request）とする
+$search = $request->input('search');
+
+$query = DB::table('contact_forms');
+
+//もしキーワードがあったら
+if($search !== null){
+        //全角スペースを半角に
+        $search_split = mb_convert_kana($search, 's');
+
+        //空白で区切る
+        $search_split2 = preg_split('/[\s]+/', $search_split, -1,　PREG_SPLIT_NO_EMPTY);
+
+        //単語をループで回す
+        foreach($search_split2 as $value){
+            $query->where('your_name', 'like', '%'.$value.'%');
+        }
+};
+
+$query->select('id', 'your_name', 'title', 'created_at');
+$query->orderBy('created_at', 'asc');
+$contacts = $query->paginate(20);
