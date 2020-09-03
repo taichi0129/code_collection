@@ -81,7 +81,7 @@ php artisan make:controller 【モデル名】Controller
 app/http/controllers直下に作成
 
 ※Restfulなコントローラーの作成
-php artisan make:controller 【モデル名】Controller —resource
+php artisan make:controller 【モデル名】Controller —-resource
 アクション全てが記述されたコントローラーが作成される
 
 ●MVCの書き方（簡易）
