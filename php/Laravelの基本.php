@@ -209,7 +209,7 @@ php artisan make:controller モデル名Controller --resource
 
 ●ルーティングの記述
 基本例）
-Route::get(‘contact/index’, ‘’ContactFormController@index);
+Route::get('contact/index', 'ContactFormController@index');
 
 認証付きのルーティング例）
 Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
@@ -217,7 +217,7 @@ Route::group(['prefix' => 'contact', 'middleware' => 'auth'], function(){
 });
 
 ※ルートに名前を付ける
-引数の後に->name(‘つけたい名前’)
+引数の後に->name('つけたい名前')
 ビューから呼び出しをする際に名前をつけておくと便利
 
 ※ルートの見方
