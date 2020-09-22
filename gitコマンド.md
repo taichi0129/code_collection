@@ -17,7 +17,7 @@ gitの初期化
 ### git pull origin master
 プルコマンド
 
-###git status
+### git status
 変更したファイルを確認する  
 modified　と赤く表示されたファイルがある場合変更したファイルとなる  
 ※緑で表示されている場合はaddした状態となる
